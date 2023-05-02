@@ -50,7 +50,7 @@ stage('Docker Login') {
 stage ('Configure Test-server with Terraform'){
       steps {
         dir('serverfiles'){
-        sh 'sudo chmod 600 fatima.pem'
+        sh 'sudo chmod 600 kittu-key.pem'
         sh 'terraform init'
         sh 'terraform validate'
         sh 'terraform apply --auto-approve'

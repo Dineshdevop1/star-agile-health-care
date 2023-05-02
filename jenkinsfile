@@ -32,3 +32,5 @@ stage('Image creation') {
         sh 'docker build -t aravindrevalli59/healthcare:latest .'
                     }
             }
+}
+}

@@ -32,5 +32,19 @@ stage('Image creation') {
         sh 'docker build -t aravindrevalli59/healthcare:latest .'
                     }
             }
+	    
+stage('Docker Login') {
+      steps {
+	withCredentials([usernamePassword(credentialsId: 'dockerlogin', passwordVariable: 'dockerhubpassword', usernameVariable: 'dockerhubuser')]) {
+        sh "docker login -u ${env.dockerhubuser} -p ${env.dockerhubpassword}"
+}
+            }
+      }
+
+ stage('Push Image to Docker Registry') {
+      steps {
+        sh 'docker push aravindrevalli59/healthcare:latest'
+            }
+           }
 }
 }

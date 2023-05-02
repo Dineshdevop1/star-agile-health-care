@@ -46,5 +46,17 @@ stage('Docker Login') {
         sh 'docker push aravindrevalli59/healthcare:latest'
             }
            }
+	   
+stage ('Configure Test-server with Terraform'){
+      steps {
+        dir('serverfiles'){
+        sh 'sudo chmod 600 fatima.pem'
+        sh 'terraform init'
+        sh 'terraform validate'
+        sh 'terraform apply --auto-approve'
+                }
+          }   
+       } 
+	  
 }
 }

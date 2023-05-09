@@ -10,47 +10,44 @@ pipeline {
     stage('CheckOut') {
       steps {
         echo 'Checkout the source code from GitHub'
-	git 'https://github.com/aravindrevalli59/star-agile-health-care.git'
+	   git 'https://github.com/Dineshdevop1/star-agile-health-care.git'
             }
     }
    
-   stage('Package and Build App') {
+    stage('Package and Build App') {
       steps {
         echo 'Build and Package App'
         sh 'mvn clean package'
            }
    	 }
-   stage('HTML reports') {
+    stage('HTML reports') {
       steps {
         echo 'publishing HTML reports'
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/healthcare', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
            }
    	 }
 
-stage('Image creation') {
+	stage('Image creation') {
       steps {
-        sh 'docker build -t aravindrevalli59/healthcare:latest .'
+        sh 'docker build -t dineshk1996/healthcare:latest .'
                     }
             }
 	    
-stage('Docker Login') {
-      steps {
-	withCredentials([usernamePassword(credentialsId: 'dockerlogin', passwordVariable: 'dockerhubpassword', usernameVariable: 'dockerhubuser')]) {
-        sh "docker login -u ${env.dockerhubuser} -p ${env.dockerhubpassword}"
-}
-            }
-      }
-
- stage('Push Image to Docker Registry') {
-      steps {
-        sh 'docker push aravindrevalli59/healthcare:latest'
-            }
-           }
+	stage('Docker Login') {
+        steps {withCredentials([usernamePassword(credentialsId: 'dockerlogin', passwordVariable: 'dhubpsswd', usernameVariable: 'dhubuser')]) {
+        sh "docker login -u ${env.dhubuser} -p ${env.dhubpsswd}"
+    			 }
+   			}
+			}
+	stage('Docker Push') 
+        { steps {
+            sh "docker push dineshk1996/healthcare:latest "
+        }}
 	   
-stage ('Configure Test-server with Terraform'){
+	stage ('Configure Test-server with Terraform'){
       steps {
         dir('serverfiles'){
-        sh 'sudo chmod 600 kittu-key.pem'
+        sh 'sudo chmod 600 project.pem'
         sh 'terraform init'
         sh 'terraform validate'
         sh 'terraform apply --auto-approve'
@@ -58,5 +55,5 @@ stage ('Configure Test-server with Terraform'){
           }   
        } 
 	  
-}
+       }
 }
